@@ -1,8 +1,7 @@
-from typing import List,Optional
+from typing import List, Optional
 from entidades.tarefa import Tarefa
+from infraestrutura.tarefa_sqlite_repository import SQLiteTarefaRepository  # Importar o repositório SQLite
 import uuid
-
-
 
 class TarefaRepositoryInterface:
     def listar(self) -> List[Tarefa]:
@@ -19,7 +18,9 @@ class TarefaRepositoryInterface:
 
 class TarefaUseCase:
     def __init__(self, tarefa_repository: TarefaRepositoryInterface):
-        self.tarefa_repository = tarefa_repository
+        self.tarefa_repository = tarefa_repository  # Corrigido para usar 'tarefa_repository' aqui
+        
+caso_uso_tarefa = TarefaUseCase(SQLiteTarefaRepository())  # Instanciando o repositório SQLite
 
     def listar_tarefas(self) -> List[Tarefa]:
         return self.tarefa_repository.listar()
@@ -27,8 +28,8 @@ class TarefaUseCase:
     def buscar_tarefa(self, id: int) -> Optional[Tarefa]:
         return self.tarefa_repository.buscar_por_id(id)
 
-    def criar_tarefa(self, titulo:str,descricao:str,completa:bool) -> Tarefa:
-        tarefa=Tarefa(id=str(uuid.uuid4()),descricao=descricao,titulo=titulo,completa=completa)
+    def criar_tarefa(self, titulo: str, descricao: str, completa: bool) -> Tarefa:
+        tarefa = Tarefa(id=str(uuid.uuid4()), descricao=descricao, titulo=titulo, completa=completa)
         return self.tarefa_repository.salvar(tarefa)
 
     def atualizar_tarefa(self, id: str, titulo: str, descricao: str, completa: bool) -> Optional[Tarefa]:
